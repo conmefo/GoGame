@@ -1,5 +1,7 @@
-#include "backend/Board.h"
+#include "../include/Board.h"
 #include <iostream>
+
+int BOARD_SIZE = 9; // default board size
 
 Board::Board(int size) {
     BOARD_SIZE = size;

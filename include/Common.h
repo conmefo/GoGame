@@ -12,7 +12,7 @@ inline Color opponent(Color c) {
 }
 
 
-int BOARD_SIZE = 9; // default board size
+extern int BOARD_SIZE; 
 
 
 inline int idx(int x, int y) {

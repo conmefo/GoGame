@@ -1,4 +1,4 @@
-#include "../../../backend/Board.h"
+#include "../include/Board.h"
 #include <iostream>
 
 int main() {
