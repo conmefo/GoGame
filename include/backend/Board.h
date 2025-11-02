@@ -7,6 +7,7 @@ private:
     std::vector<Color> grid;
 
 public:
+    void printBoard() const;
     Board(int size);              
     void reset(int size);           
     bool placeStone(int x, int y, Color c);

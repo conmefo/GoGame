@@ -22,3 +22,23 @@ bool Board::placeStone(int x, int y, Color c) {
 Color Board::get(int x, int y) const {
     return grid[y * BOARD_SIZE + x];
 }
+
+void Board::printBoard() const {
+    std::cout << "\n   ";
+    for (int x = 0; x < BOARD_SIZE; ++x)
+        std::cout << x << " ";
+    std::cout << "\n";
+
+    for (int y = 0; y < BOARD_SIZE; ++y) {
+        std::cout << y << ": ";
+        for (int x = 0; x < BOARD_SIZE; ++x) {
+            Color c = grid[idx(x, y)];
+            char symbol = '.';
+            if (c == Color::BLACK) symbol = 'B';
+            else if (c == Color::WHITE) symbol = 'W';
+            std::cout << symbol << " ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << std::endl;
+}
