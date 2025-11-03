@@ -19,6 +19,7 @@ struct Move {
     int y;
     Color playerColor;
     std::vector<int> capturedStonesIndices; 
+    Move (int x= -1, int y= -1, Color c= Color::EMPTY) : x(x), y(y), playerColor(c) {}
 };
 
 class Game {
@@ -35,19 +36,19 @@ public:
 
     void redo();
 
-    bool saveGame(const std::string& filename) const;
+    bool saveGame(std::string& filename);
 
-    bool loadGame(const std::string& filename);
+    bool loadGame(std::string& filename);
 
-    const Board& getBoard() const;
+    Board& getBoard();
 
-    Color getCurrentPlayer() const;
+    Color getCurrentPlayer();
 
-    GameState getGameState() const;
+    GameState getGameState();
 
-    int getBlackCaptures() const;
+    int getBlackCaptures();
 
-    int getWhiteCaptures() const;
+    int getWhiteCaptures();
 
 private:
     Board board;                      

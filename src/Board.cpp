@@ -8,6 +8,10 @@ int Board::idx(int x, int y) const{
     return y * BOARD_SIZE + x;
 }
 
+Board::Board() {
+    BOARD_SIZE = 9;
+    grid.assign(BOARD_SIZE * BOARD_SIZE, Color::EMPTY);
+}
 
 Board::Board(int size) {
     BOARD_SIZE = size;
@@ -34,6 +38,11 @@ int Board::countLiberties(int x, int y, Color c, std::vector<int>& visited, cons
         liberties += countLiberties(x + dx[dir], y + dy[dir], c, visited, board, flag);
     }
     return liberties;
+}
+
+void Board::forceSetStone(int x, int y, Color c) {
+    if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) return;
+    grid[idx(x, y)] = c;
 }
 
 std::vector<int> Board::checkCaptureStones(int x, int y, Color c) {
@@ -112,4 +121,8 @@ void Board::printBoard() const {
         std::cout << "\n";
     }
     std::cout << std::endl;
+}
+
+std::vector<Color>& Board::getGrid(){
+    return grid;
 }
