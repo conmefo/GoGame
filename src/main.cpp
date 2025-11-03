@@ -6,13 +6,9 @@ int main() {
     board.printBoard();
 
     std::cout << "Place a few stones...\n";
-    board.placeStone(4, 4, Color::BLACK);
-    board.placeStone(2, 3, Color::WHITE);
-    board.placeStone(4, 5, Color::BLACK);
+    board.placeStone(1, 0, Color::BLACK);
+    board.placeStone(0, 1, Color::BLACK);
+    board.placeStone(0, 0, Color::WHITE);
 
-    board.printBoard();
-
-    std::cout << "Change board to 13x13\n";
-    board.reset(13);
     board.printBoard();
 }
