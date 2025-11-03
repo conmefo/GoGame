@@ -143,7 +143,7 @@ void Game::redo() {
 }
 
 
-bool Game::saveGame(std::string& filename) {
+bool Game::saveGame(std::string filename) {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) return false;
 
@@ -179,7 +179,7 @@ bool Game::saveGame(std::string& filename) {
     return true;
 }
 
-bool Game::loadGame(std::string& filename) {
+bool Game::loadGame(std::string filename) {
     std::ifstream inFile(filename);
     if (!inFile.is_open()) return false;
 

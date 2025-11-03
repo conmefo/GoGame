@@ -36,9 +36,9 @@ public:
 
     void redo();
 
-    bool saveGame(std::string& filename);
+    bool saveGame(std::string filename);
 
-    bool loadGame(std::string& filename);
+    bool loadGame(std::string filename);
 
     Board& getBoard();
 
