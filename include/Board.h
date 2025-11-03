@@ -7,6 +7,8 @@ private:
     std::vector<Color> grid;
 
 public:
+    int BOARD_SIZE = 9; 
+    int idx(int x, int y) const;
     void printBoard() const;
     Board(int size);              
     void reset(int size);           

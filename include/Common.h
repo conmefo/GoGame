@@ -12,9 +12,5 @@ inline Color opponent(Color c) {
 }
 
 
-extern int BOARD_SIZE; 
 
 
-inline int idx(int x, int y) {
-    return y * BOARD_SIZE + x;
-}
