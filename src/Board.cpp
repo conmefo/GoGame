@@ -1,9 +1,17 @@
 #include "../include/Board.h"
 #include <iostream>
 
-int BOARD_SIZE = 9; // default board size
 int dx[4] = {1, -1, 0, 0};
 int dy[4] = {0, 0, 1, -1};
+
+int Board::idx(int x, int y) const{
+    return y * BOARD_SIZE + x;
+}
+
+Board::Board() {
+    BOARD_SIZE = 9;
+    grid.assign(BOARD_SIZE * BOARD_SIZE, Color::EMPTY);
+}
 
 Board::Board(int size) {
     BOARD_SIZE = size;
@@ -17,7 +25,7 @@ void Board::reset(int size) {
 
 int Board::countLiberties(int x, int y, Color c, std::vector<int>& visited, const Board& board, int flag) {
     if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) return 0;
-    int index = y * BOARD_SIZE + x;
+    int index = idx(x, y);
     if (visited[index]) return 0;
     visited[index] = flag;
 
@@ -32,11 +40,15 @@ int Board::countLiberties(int x, int y, Color c, std::vector<int>& visited, cons
     return liberties;
 }
 
+void Board::forceSetStone(int x, int y, Color c) {
+    if (x < 0 || y < 0 || x >= BOARD_SIZE || y >= BOARD_SIZE) return;
+    grid[idx(x, y)] = c;
+}
+
 std::vector<int> Board::checkCaptureStones(int x, int y, Color c) {
     std::vector<int> captured;
     std::vector<int> visited(BOARD_SIZE * BOARD_SIZE, 0);
 
-    std::cout << x << " " << y << " " << static_cast<int>(c) << "\n";
 
     for (int dir = 0; dir < 4; ++dir) {
         int nx = x + dx[dir];
@@ -109,4 +121,8 @@ void Board::printBoard() const {
         std::cout << "\n";
     }
     std::cout << std::endl;
+}
+
+std::vector<Color>& Board::getGrid(){
+    return grid;
 }
