@@ -12,7 +12,7 @@ Game::Game(int boardSize, GameMode mode) {
 
 void Game::reset() {
     board.reset(board.BOARD_SIZE); 
-    currentPlayer = Color::BLACK;
+    currentPlayer = StoneColor::BLACK;
     state = GameState::ONGOING;
     blackCaptures = 0;
     whiteCaptures = 0;
@@ -30,14 +30,14 @@ bool Game::makeMove(int x, int y) {
         return false;
     }
 
-    const std::vector<Color>& boardBeforeMove = board.getGrid();
+    const std::vector<StoneColor>& boardBeforeMove = board.getGrid();
     
     bool success = board.placeStone(x, y, currentPlayer);
 
     if (success) {
         Move move = Move(x, y, currentPlayer);
 
-        const std::vector<Color>& boardAfterMove = board.getGrid();
+        const std::vector<StoneColor>& boardAfterMove = board.getGrid();
 
         for (int i = 0; i < boardAfterMove.size(); ++i) {
             if (boardBeforeMove[i] != boardAfterMove[i] && i != board.idx(x, y)) {
@@ -45,7 +45,7 @@ bool Game::makeMove(int x, int y) {
             }
         }
 
-        if (currentPlayer == Color::BLACK) {
+        if (currentPlayer == StoneColor::BLACK) {
             blackCaptures += move.capturedStonesIndices.size();
         } else {
             whiteCaptures += move.capturedStonesIndices.size();
@@ -90,16 +90,16 @@ void Game::undo() {
     if (lastMove.x == -1) { 
         consecutivePasses--;
     } else { 
-        board.forceSetStone(lastMove.x, lastMove.y, Color::EMPTY);
+        board.forceSetStone(lastMove.x, lastMove.y, StoneColor::EMPTY);
 
-        Color opponentColor = (lastMove.playerColor == Color::BLACK) ? Color::WHITE : Color::BLACK;
+        StoneColor opponentColor = (lastMove.playerColor == StoneColor::BLACK) ? StoneColor::WHITE : StoneColor::BLACK;
         for (int index : lastMove.capturedStonesIndices) {
             int y = index / board.BOARD_SIZE;
             int x = index % board.BOARD_SIZE;
             board.forceSetStone(x, y, opponentColor);
         }
 
-        if (lastMove.playerColor == Color::BLACK) {
+        if (lastMove.playerColor == StoneColor::BLACK) {
             blackCaptures -= lastMove.capturedStonesIndices.size();
         } else {
             whiteCaptures -= lastMove.capturedStonesIndices.size();
@@ -127,10 +127,10 @@ void Game::redo() {
         for (int index : moveToRedo.capturedStonesIndices) {
             int y = index / board.BOARD_SIZE;
             int x = index % board.BOARD_SIZE;
-            board.forceSetStone(x, y, Color::EMPTY);
+            board.forceSetStone(x, y, StoneColor::EMPTY);
         }
 
-        if (moveToRedo.playerColor == Color::BLACK) {
+        if (moveToRedo.playerColor == StoneColor::BLACK) {
             blackCaptures += moveToRedo.capturedStonesIndices.size();
         } else {
             whiteCaptures += moveToRedo.capturedStonesIndices.size();
@@ -154,7 +154,7 @@ bool Game::saveGame(std::string filename) {
     outFile << whiteCaptures << std::endl;
     outFile << consecutivePasses << std::endl;
 
-    const std::vector<Color>& grid = board.getGrid();
+    const std::vector<StoneColor>& grid = board.getGrid();
     for (int i = 0; i < grid.size(); ++i)
         outFile << static_cast<int>(grid[i]) << (i == grid.size() - 1 ? "" : " ");
     outFile << std::endl;
@@ -190,17 +190,17 @@ bool Game::loadGame(std::string filename) {
     int modeInt, playerInt;
     inFile >> modeInt >> playerInt;
     mode = static_cast<GameMode>(modeInt);
-    currentPlayer = static_cast<Color>(playerInt);
+    currentPlayer = static_cast<StoneColor>(playerInt);
 
     inFile >> blackCaptures >> whiteCaptures >> consecutivePasses;
 
-    const std::vector<Color>& grid = board.getGrid();
+    const std::vector<StoneColor>& grid = board.getGrid();
     for (int i = 0; i < grid.size(); ++i) {
         int colorInt;
         inFile >> colorInt;
         int y = i / boardSize;
         int x = i % boardSize;
-        board.forceSetStone(x, y, static_cast<Color>(colorInt));
+        board.forceSetStone(x, y, static_cast<StoneColor>(colorInt));
     }
 
     while (!undoStack.empty()) undoStack.pop();
@@ -214,7 +214,7 @@ bool Game::loadGame(std::string filename) {
         Move move;
         int playerInt, capturedCount;
         inFile >> move.x >> move.y >> playerInt;
-        move.playerColor = static_cast<Color>(playerInt);
+        move.playerColor = static_cast<StoneColor>(playerInt);
         inFile >> capturedCount;
         move.capturedStonesIndices.resize(capturedCount);
         for (int j = 0; j < capturedCount; ++j)
@@ -236,7 +236,7 @@ Board& Game::getBoard() {
     return board;
 }
 
-Color Game::getCurrentPlayer() {
+StoneColor Game::getCurrentPlayer() {
     return currentPlayer;
 }
 
@@ -254,7 +254,7 @@ int Game::getWhiteCaptures() {
 
 
 void Game::switchPlayer() {
-    currentPlayer = (currentPlayer == Color::BLACK) ? Color::WHITE : Color::BLACK;
+    currentPlayer = (currentPlayer == StoneColor::BLACK) ? StoneColor::WHITE : StoneColor::BLACK;
 }
 
 void Game::clearRedoStack() {

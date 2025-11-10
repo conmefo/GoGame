@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include "Game.h"
+#include "GameView.h"
 
 
 enum class ScreenState {
@@ -60,7 +61,10 @@ private:
     void setupGameButtons();
 
     bool mapPixelToBoardCoords( sf::Vector2i& mousePosition, int& boardX, int& boardY);
-
+    sf::RenderWindow m_window; // Cửa sổ game
+    Game m_game;         // Sở hữu "Bộ não" logic
+    GameView m_gameView; // Sở hữu "Họa sĩ"
+    
 
     sf::RenderWindow window;    
     Game game;                
