@@ -1,14 +1,9 @@
-#include "../include/Board.h"
-#include "../include/Game.h"
-#include <iostream>
+// main.cpp
+#include "../include/GameUI.h"
 
 int main() {
-    Board board(9);  // start with 9x9
-    Game game(9, GameMode::PLAYER_VS_PLAYER);
-    game.makeMove(4, 4);
-    game.passTurn();
-    game.makeMove(4, 5);
-    game.saveGame("save.txt");
-    game.loadGame("save.txt");
+    GameUI gameUI; // Tạo đối tượng "Tổng thầu"
+    gameUI.run();  // Bảo nó chạy
+    
     return 0;
 }

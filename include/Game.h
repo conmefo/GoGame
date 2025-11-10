@@ -17,9 +17,9 @@ enum class GameState {
 struct Move {
     int x;
     int y;
-    Color playerColor;
+    StoneColor playerColor;
     std::vector<int> capturedStonesIndices; 
-    Move (int x= -1, int y= -1, Color c= Color::EMPTY) : x(x), y(y), playerColor(c) {}
+    Move (int x= -1, int y= -1, StoneColor c= StoneColor::EMPTY) : x(x), y(y), playerColor(c) {}
 };
 
 class Game {
@@ -42,7 +42,7 @@ public:
 
     Board& getBoard();
 
-    Color getCurrentPlayer();
+    StoneColor getCurrentPlayer();
 
     GameState getGameState();
 
@@ -52,7 +52,7 @@ public:
 
 private:
     Board board;                      
-    Color currentPlayer;              
+    StoneColor currentPlayer;              
     GameMode mode;            
     GameState state;             
 
