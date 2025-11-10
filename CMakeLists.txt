@@ -51,6 +51,9 @@ else()
         sfml-system
     )
 endif()
+set(SFML_STATIC_LIBRARIES TRUE)
+find_package(SFML 2.6 COMPONENTS system window graphics audio REQUIRED)
+
 
 # Optional: copy SFML DLLs for Windows (if needed)
 if (WIN32)
