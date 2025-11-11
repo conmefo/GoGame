@@ -24,7 +24,7 @@ void Game::reset() {
     }
 }
 
-
+//tra ve true neu buoc di hop le
 bool Game::makeMove(int x, int y) {
     if (state == GameState::FINISHED) {
         return false;

@@ -1,3 +1,0 @@
-D:/coding/project/GoGame/build/CMakeFiles/GoGame.dir
-D:/coding/project/GoGame/build/CMakeFiles/edit_cache.dir
-D:/coding/project/GoGame/build/CMakeFiles/rebuild_cache.dir
