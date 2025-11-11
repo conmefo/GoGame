@@ -1,17 +1,16 @@
 #include "../include/Game.h"
+
 #include <fstream>
 #include <vector>
-
 
 Game::Game(int boardSize, GameMode mode) {
     board = Board(boardSize);
     this->mode = mode;
-    reset(); 
+    reset();
 }
 
-
 void Game::reset() {
-    board.reset(board.BOARD_SIZE); 
+    board.reset(board.BOARD_SIZE);
     currentPlayer = StoneColor::BLACK;
     state = GameState::ONGOING;
     blackCaptures = 0;
@@ -24,14 +23,14 @@ void Game::reset() {
     }
 }
 
-//tra ve true neu buoc di hop le
+// tra ve true neu buoc di hop le
 bool Game::makeMove(int x, int y) {
     if (state == GameState::FINISHED) {
         return false;
     }
 
     const std::vector<StoneColor>& boardBeforeMove = board.getGrid();
-    
+
     bool success = board.placeStone(x, y, currentPlayer);
 
     if (success) {
@@ -50,16 +49,18 @@ bool Game::makeMove(int x, int y) {
         } else {
             whiteCaptures += move.capturedStonesIndices.size();
         }
-        
+
         undoStack.push(move);
-        clearRedoStack(); 
+        clearRedoStack();
         consecutivePasses = 0;
         switchPlayer();
     }
 
+    board.printBoard();
     return success;
 }
 
+// skip luot
 void Game::passTurn() {
     if (state == GameState::FINISHED) {
         return;
@@ -71,28 +72,29 @@ void Game::passTurn() {
 
     consecutivePasses++;
     if (consecutivePasses >= 2) {
-        state = GameState::FINISHED; 
+        state = GameState::FINISHED;
     } else {
         switchPlayer();
     }
 }
 
-
+// hoan tac nuoc di
 void Game::undo() {
     if (undoStack.empty()) {
-        return; 
+        return;
     }
 
     Move lastMove = undoStack.top();
     undoStack.pop();
     redoStack.push(lastMove);
 
-    if (lastMove.x == -1) { 
+    if (lastMove.x == -1) {
         consecutivePasses--;
-    } else { 
+    } else {
         board.forceSetStone(lastMove.x, lastMove.y, StoneColor::EMPTY);
 
-        StoneColor opponentColor = (lastMove.playerColor == StoneColor::BLACK) ? StoneColor::WHITE : StoneColor::BLACK;
+        StoneColor opponentColor =
+            (lastMove.playerColor == StoneColor::BLACK) ? StoneColor::WHITE : StoneColor::BLACK;
         for (int index : lastMove.capturedStonesIndices) {
             int y = index / board.BOARD_SIZE;
             int x = index % board.BOARD_SIZE;
@@ -105,25 +107,26 @@ void Game::undo() {
             whiteCaptures -= lastMove.capturedStonesIndices.size();
         }
     }
-    
-    currentPlayer = lastMove.playerColor; 
-    state = GameState::ONGOING; 
+
+    currentPlayer = lastMove.playerColor;
+    state = GameState::ONGOING;
 }
 
+// hoac tac lai nuoc hoan tac
 void Game::redo() {
     if (redoStack.empty()) {
-        return; 
+        return;
     }
 
     Move moveToRedo = redoStack.top();
     redoStack.pop();
 
-    if (moveToRedo.x == -1) { 
-        passTurn(); 
-        undoStack.pop(); 
-    } else { 
+    if (moveToRedo.x == -1) {
+        passTurn();
+        undoStack.pop();
+    } else {
         board.forceSetStone(moveToRedo.x, moveToRedo.y, moveToRedo.playerColor);
-        
+
         for (int index : moveToRedo.capturedStonesIndices) {
             int y = index / board.BOARD_SIZE;
             int x = index % board.BOARD_SIZE;
@@ -135,13 +138,12 @@ void Game::redo() {
         } else {
             whiteCaptures += moveToRedo.capturedStonesIndices.size();
         }
-        
+
         switchPlayer();
     }
 
     undoStack.push(moveToRedo);
 }
-
 
 bool Game::saveGame(std::string filename) {
     std::ofstream outFile(filename);
@@ -170,8 +172,7 @@ bool Game::saveGame(std::string filename) {
     for (auto it = history.rbegin(); it != history.rend(); ++it) {
         outFile << it->x << " " << it->y << " " << static_cast<int>(it->playerColor) << " ";
         outFile << it->capturedStonesIndices.size() << " ";
-        for (int idx : it->capturedStonesIndices)
-            outFile << idx << " ";
+        for (int idx : it->capturedStonesIndices) outFile << idx << " ";
         outFile << std::endl;
     }
 
@@ -217,41 +218,26 @@ bool Game::loadGame(std::string filename) {
         move.playerColor = static_cast<StoneColor>(playerInt);
         inFile >> capturedCount;
         move.capturedStonesIndices.resize(capturedCount);
-        for (int j = 0; j < capturedCount; ++j)
-            inFile >> move.capturedStonesIndices[j];
+        for (int j = 0; j < capturedCount; ++j) inFile >> move.capturedStonesIndices[j];
         moveHistory.push_back(move);
     }
 
-    for (auto it = moveHistory.rbegin(); it != moveHistory.rend(); ++it)
-        undoStack.push(*it);
+    for (auto it = moveHistory.rbegin(); it != moveHistory.rend(); ++it) undoStack.push(*it);
 
     state = GameState::ONGOING;
     inFile.close();
     return true;
 }
 
+Board& Game::getBoard() { return board; }
 
+StoneColor Game::getCurrentPlayer() { return currentPlayer; }
 
-Board& Game::getBoard() {
-    return board;
-}
+GameState Game::getGameState() { return state; }
 
-StoneColor Game::getCurrentPlayer() {
-    return currentPlayer;
-}
+int Game::getBlackCaptures() { return blackCaptures; }
 
-GameState Game::getGameState() {
-    return state;
-}
-
-int Game::getBlackCaptures() {
-    return blackCaptures;
-}
-
-int Game::getWhiteCaptures() {
-    return whiteCaptures;
-}
-
+int Game::getWhiteCaptures() { return whiteCaptures; }
 
 void Game::switchPlayer() {
     currentPlayer = (currentPlayer == StoneColor::BLACK) ? StoneColor::WHITE : StoneColor::BLACK;
