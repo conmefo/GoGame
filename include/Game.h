@@ -36,6 +36,9 @@ public:
 
     void redo();
 
+    std::pair<StoneColor, int> Game::checkTerritory(int position, std::vector<int>& visited);
+    void calculatePoint();
+    
     bool saveGame(std::string filename);
 
     bool loadGame(std::string filename);

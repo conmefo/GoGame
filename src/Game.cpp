@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <vector>
+#include <queue>
 
 Game::Game(int boardSize, GameMode mode) {
     board = Board(boardSize);
@@ -145,6 +146,79 @@ void Game::redo() {
     undoStack.push(moveToRedo);
 }
 
+std::pair<StoneColor, int> Game::checkTerritory(int position, std::vector<int>& visited) {
+    int size = board.BOARD_SIZE;
+    std::vector<StoneColor>& grid = board.getGrid();
+
+    int startX = position % size;
+    int startY = position / size;
+
+    std::queue<std::pair<int,int>> q;
+    q.push({startX, startY});
+    visited[position] = 1;
+
+    int territorySize = 0;
+    bool touchesBlack = false;
+    bool touchesWhite = false;
+
+    while (!q.empty()) {
+        auto [x, y] = q.front(); q.pop();
+        territorySize++;
+
+        const int dx[4] = {1, -1, 0, 0};
+        const int dy[4] = {0, 0, 1, -1};
+
+        for (int d = 0; d < 4; d++) {
+            int nx = x + dx[d];
+            int ny = y + dy[d];
+
+            if (nx < 0 || nx >= size || ny < 0 || ny >= size) continue;
+
+            int idx = ny * size + nx;
+
+            if (grid[idx] == StoneColor::EMPTY && !visited[idx]) {
+                visited[idx] = 1;
+                q.push({nx, ny});
+            } else if (grid[idx] == StoneColor::BLACK) {
+                touchesBlack = true;
+            } else if (grid[idx] == StoneColor::WHITE) {
+                touchesWhite = true;
+            }
+        }
+    }
+
+    if (touchesBlack && !touchesWhite) return {StoneColor::BLACK, territorySize};
+    if (!touchesBlack && touchesWhite) return {StoneColor::WHITE, territorySize};
+    return {StoneColor::EMPTY, 0}; 
+}
+
+
+void Game::calculatePoint() {
+    int size = board.BOARD_SIZE;
+    std::vector<int> visited(size * size, 0);
+    std::vector<StoneColor>& grid = board.getGrid();
+
+    int blackScore = 0;
+    int whiteScore = 0;
+
+    for (int i = 0; i < grid.size(); ++i) {
+        if (grid[i] == StoneColor::BLACK) blackScore++;
+        else if (grid[i] == StoneColor::WHITE) whiteScore++;
+    }
+
+    for (int i = 0; i < grid.size(); ++i) {
+        if (!visited[i] && grid[i] == StoneColor::EMPTY) {
+            auto [owner, territorySize] = checkTerritory(i, visited);
+            if (owner == StoneColor::BLACK) blackScore += territorySize;
+            else if (owner == StoneColor::WHITE) whiteScore += territorySize;
+        }
+    }
+
+    blackCaptures += blackScore;
+    whiteCaptures += whiteScore;
+}
+
+
 bool Game::saveGame(std::string filename) {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) return false;
@@ -156,7 +230,7 @@ bool Game::saveGame(std::string filename) {
     outFile << whiteCaptures << std::endl;
     outFile << consecutivePasses << std::endl;
 
-    const std::vector<StoneColor>& grid = board.getGrid();
+    std::vector<StoneColor>& grid = board.getGrid();
     for (int i = 0; i < grid.size(); ++i)
         outFile << static_cast<int>(grid[i]) << (i == grid.size() - 1 ? "" : " ");
     outFile << std::endl;

@@ -50,6 +50,10 @@ void GameUI::handleEvents() {
                     }
                     // m_game.makeMove đã tự động đổi lượt
                     // và xử lý ăn quân
+
+                    if (game.getGameState() == GameState::FINISHED){
+                        // vẽ bảng show winner và điểm của cả 2 
+                    }
                 }
             }
         }

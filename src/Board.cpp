@@ -70,7 +70,6 @@ std::vector<int> Board::checkCaptureStones(int x, int y, StoneColor c) {
         }
     }
 
-    std::cout << "Captured stones count: " << captured.size() << "\n";
 
     return captured;
 }
@@ -92,6 +91,7 @@ bool Board::placeStone(int x, int y, StoneColor c) {
         }
         return true;
     } else {
+
         for (int i : captured) {
             grid[i] = StoneColor::EMPTY;
         }
