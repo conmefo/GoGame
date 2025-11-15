@@ -8,8 +8,6 @@ set SRC=src
 set SFML=SFML-2.6.2
 set OUTDIR=build
 
-:: Ensure build folder exists
-if not exist "%OUTDIR%" mkdir "%OUTDIR%"
 
 :: Compile + link in ONE command
 g++ ^
