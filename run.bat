@@ -21,9 +21,6 @@ g++ ^
     -I"%SFML%\include" ^
     -L"%SFML%\lib" ^
     -o "%OUTDIR%\GoGame.exe" ^
-    ::tat mconsolve neu khong muon in ra terminal
-    -mconsole ^ 
-	-std=c++17 ^
     -lmingw32 -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -mwindows
 
 echo Copying DLL
