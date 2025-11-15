@@ -29,4 +29,7 @@ copy "%SFML%\bin\*.dll" "%OUTDIR%\" >nul
 
 echo Build complete
 echo Output: %OUTDIR%\GoGame.exe
+
+"%OUTDIR%\GoGame.exe"
+
 pause
